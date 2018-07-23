@@ -11,9 +11,13 @@
             <button class="btn btn-primary" @click="populate()">{{ 'POPULATE' | translate }}</button>
         </div>
 
-        <div class="map m-t-20">
+        <div class="map map-size m-t-20">
             <div class="map-row display-block" v-for="(row, rowIndex) in renderedMap" :key="rowIndex">
-                <div class="map-col map-loc display-inline-block" v-for="(col, colIndex) in row" :key="colIndex" @click="toggleBlocker(rowIndex, colIndex)">
+                <div
+                    class="map-col map-loc display-inline-block"
+                    v-for="(col, colIndex) in row" :key="colIndex"
+                    v-bind:class="{ unavailable: col === -1 }"
+                    @click="toggleBlocker(rowIndex, colIndex)">
                     {{ col }}
                 </div>
             </div>
@@ -25,10 +29,20 @@
 export default {
     name: 'ShortestPaths',
     data: () => ({
-        width: 2,
-        height: 2,
+        width: 5,
+        height: 5,
         map: [],
     }),
+    watch: {
+        width: function() {
+            this.initMap();
+            this.populate();
+        },
+        height: function() {
+            this.initMap();
+            this.populate();
+        }
+    },
     computed: {
         renderedMap() {
             return this.map;
@@ -41,7 +55,6 @@ export default {
             this.map = this.$Path.map;
         },
         populate() {
-            this.$Path.setSize(this.width, this.height);
             this.map = this.$Path.fillNumberOfShortestPaths();
             this.map = this.$Path.map;
         },
@@ -64,19 +77,24 @@ export default {
 .map-row {
     overflow: hidden;
     height: 48px;
+    line-height: 48px;
 }
 
 .map-loc {
     width: 32px;
     height: 32px;
     line-height: 32px;
-    text-overflow: ellipsis;
     overflow: hidden;
     background: rgba(122, 189, 234, 0.75);
-    border: solid 1px #fff;
     color: #444;
     font-weight: 700;
-    padding: 8px;
     font-size: 12px;
+    border: solid 1px #999;
+    padding: 8px;
+
+    &.unavailable {
+        background: #42b983;
+        color: #42b983;
+    }
 }
 </style>

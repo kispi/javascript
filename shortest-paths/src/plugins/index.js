@@ -43,12 +43,17 @@ var Path = {
         this.save();
     },
     fillNumberOfShortestPaths: function() {
+        if (this.map.length === 0) {
+            console.error("map is not initialized");
+            return;
+        }
+        
         for (var y = 0; y < this.map.length; y++) {
             for (var x = 0; x < this.map[y].length; x++) {
                 if (this.map[y][x] === 0) {
-                    if (this.map[y - 1][x] === this.const.UNAVAILBLE && this.map[y][x - 1] > 0) {
+                    if (this.map[y - 1][x] === this.const.UNAVAILBLE && this.map[y][x - 1] >= 0) {
                         this.map[y][x] = this.map[y][x - 1];
-                    } else if (this.map[y - 1][x] > 0 && this.map[y][x - 1] === this.const.UNAVAILBLE) {
+                    } else if (this.map[y - 1][x] >= 0 && this.map[y][x - 1] === this.const.UNAVAILBLE) {
                         this.map[y][x] = this.map[y - 1][x];
                     } else if (this.map[y - 1][x] === this.const.UNAVAILBLE && this.map[y][x - 1] === this.const.UNAVAILBLE) {
                         this.map[y][x] = 0;
@@ -61,8 +66,13 @@ var Path = {
         this.save();
     },
     toggleBlocker: function(rowIndex, colIndex) {
+        if (rowIndex * colIndex === 0) {
+            return;
+        }
+
         var target = this.map[rowIndex][colIndex];
         this.map[rowIndex][colIndex] = (target === this.const.UNAVAILBLE ? 0 : this.const.UNAVAILBLE);
+
         this.initMapWithBlockers();
         this.fillNumberOfShortestPaths();
         this.save();
