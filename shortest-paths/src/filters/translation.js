@@ -10,6 +10,14 @@ var translation = {
     CREATE: {
         en: "Create",
         kr: "생성"
+    },
+    INIT: {
+        en: "Init",
+        kr: "맵 생성"
+    },
+    POPULATE: {
+        en: "Populate",
+        kr: "구하기"
     }
 }
 
